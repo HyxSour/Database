@@ -1,0 +1,90 @@
+
+CREATE TABLE stay(
+stay_num VARCHAR(3) NOT NULL,
+student_name VARCHAR(20)NOT NULL,
+stay_water INT CHECK(stay_water>0),
+stay_ele INT CHECK(stay_ele>0),
+stay_fix INT CHECK(stay_fix>0),
+stay INT CHECK(stay>0) PRIMARY KEY ,
+stay_date DATE,
+stay_add INT CHECK(stay_add>0)
+)
+
+
+INSERT INTO stay(stay_num,student_name,stay_water,stay_ele,stay_fix,stay,stay_date,stay_add)VALUES('269','黄耀萱','50','200','25','2200','2021-8-11',stay_water + stay_ele + stay_fix + stay)
+
+INSERT INTO stay(stay_num,student_name,stay_water,stay_ele,stay_fix,stay,stay_date,stay_add)VALUES('269','张廷伟','50','200','25','2200','2021-8-11',stay_water + stay_ele + stay_fix + stay)
+CREATE TABLE building(
+building_num VARCHAR(5) PRIMARY KEY  NOT NULL,
+stay_num VARCHAR(3) NOT NULL,
+building_p_total INT
+)
+INSERT INTO 
+
+CREATE TABLE admin(
+admin_name VARCHAR(20) PRIMARY KEY NOT NULL,
+admin_sex VARCHAR(2) CHECK(admin_sex='男' OR admin_sex='女'),
+admin_age INT CHECK(admin_age>0 AND admin_age <100),
+admin_phone VARCHAR(15),
+admin_building VARCHAR(5),
+FOREIGN KEY(admin_building) REFERENCES building(building_num)
+)
+
+CREATE TABLE food(
+building_num VARCHAR(5),
+stay_num VARCHAR(3) NOT NULL,
+food_name VARCHAR(20)  PRIMARY KEY NOT NULL,
+food_type VARCHAR(5),
+food_num VARCHAR(3) CHECK(food_num>0),
+FOREIGN KEY(building_num) REFERENCES building(building_num)
+)
+
+CREATE TABLE goods(
+stay_num VARCHAR(3),
+goods VARCHAR(5) PRIMARY KEY NOT NULL,
+student_name VARCHAR(20) NOT NULL,
+goods_table INT CHECK(goods_table>0),
+goods_chair INT CHECK(goods_chair>0),
+goods_bed INT CHECK(goods_bed>0),
+goods_fan INT CHECK(goods_fan>0),
+goods_light INT CHECK(goods_light>0),
+goods_windows INT CHECK(goods_windows>0),
+goods_door INT CHECK(goods_door>0),
+FOREIGN KEY(student_name) REFERENCES student(student_name)
+)
+
+CREATE TABLE student(
+student_name VARCHAR(5) PRIMARY KEY NOT NULL,
+student_num VARCHAR(12),
+student_sex VARCHAR(2) CHECK (student_sex='男' OR student_sex='女'),
+student_age VARCHAR(3) CHECK (student_age>0 AND student_age<100),
+student_phone VARCHAR(11),
+student_major VARCHAR(5),
+stay_num VARCHAR(3),
+building_num VARCHAR(5),
+FOREIGN KEY(building_num) REFERENCES building(building_num),
+FOREIGN KEY(student_name) REFERENCES stay(student_name)
+)
+
+DROP TABLE IF EXISTS admin
+DROP TABLE IF EXISTS building
+DROP TABLE IF EXISTS food
+DROP TABLE IF EXISTS goods
+DROP TABLE IF EXISTS stay
+DROP TABLE IF EXISTS student
+
+
+INSERT INTO admin(admin_name,admin_sex,admin_phone,admin_building)VALUES('张三','男',24,'13432925679','16')
+
+INSERT INTO building(building_num,)
+
+
+CREATE TABLE room(
+building_num VARCHAR(5) NOT NULL,
+room VARCHAR(3) PRIMARY KEY NOT NULL,
+room_type VARCHAR(5) CHECK(room_type='普通' OR room_type='豪华'),
+room_count INT CHECK(room_count='2' OR room_count='4'),
+room_num INT CHECK(room_num>0 AND room_num<=4),
+room_name VARCHAR(10),
+FOREIGN KEY(building_num) REFERENCES building(building_num)
+)

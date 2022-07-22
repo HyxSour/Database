@@ -1,0 +1,369 @@
+ 
+CREATE TABLE stay(
+stay_num VARCHAR(3) NOT NULL,
+student_name VARCHAR(20)NOT NULL,
+stay_water INT CHECK(stay_water>0),
+stay_ele INT CHECK(stay_ele>0),
+stay_fix INT CHECK(stay_fix>0),
+stay INT CHECK(stay>0) PRIMARY KEY ,
+stay_date DATE,
+stay_add INT CHECK(stay_add>0),
+FOREIGN KEY(stay_num) REFERENCES room(room)
+)
+
+INSERT INTO stay(stay_num,student_name,stay_water,stay_ele,stay_fix,stay,stay_date,stay_add)VALUES('269','黄耀萱','50','200','25','2200','2021-8-11',stay_water + stay_ele + stay_fix + stay)
+
+INSERT INTO stay(stay_num,student_name,stay_water,stay_ele,stay_fix,stay,stay_date,stay_add)VALUES('269','张廷伟','50','200','25','2200','2021-8-11',stay_water + stay_ele + stay_fix + stay)
+
+
+CREATE TABLE building(
+building_num VARCHAR(5) PRIMARY KEY  NOT NULL,
+stay_num VARCHAR(3) NOT NULL,
+building_p_total INT
+)
+INSERT INTO building(building_num,building_p_total)VALUES
+('C1',200),
+('C2',200),
+('C3',200),
+('C4',200),
+('C5',200),；
+
+
+CREATE TABLE admin(
+admin_name VARCHAR(20) PRIMARY KEY NOT NULL,
+admin_sex VARCHAR(2) CHECK(admin_sex='男' OR admin_sex='女'),
+admin_age INT CHECK(admin_age>0 AND admin_age <100),
+admin_phone VARCHAR(15),
+admin_building VARCHAR(5),
+FOREIGN KEY(admin_building) REFERENCES building(building_num)
+)
+
+INSERT INTO admin(admin_name,admin_sex,admin_age,admin_phone,admin_building)VALUES('王阿姨','女',55,'13432925679','C1');
+INSERT INTO admin(admin_name,admin_sex,admin_age,admin_phone,admin_building)VALUES('陈阿姨','女',55,'13432925680','C2');
+INSERT INTO admin(admin_name,admin_sex,admin_age,admin_phone,admin_building)VALUES('周叔','男',45,'13446756880','C3');
+INSERT INTO admin(admin_name,admin_sex,admin_age,admin_phone,admin_building)VALUES('黄叔','男',38,'19865343677','C4');
+INSERT INTO admin(admin_name,admin_sex,admin_age,admin_phone,admin_building)VALUES('陆阿姨','女',35,'13432925345','C5');
+
+
+CREATE TABLE food(
+building_num VARCHAR(5),
+stay_num VARCHAR(3) NOT NULL,
+food_name VARCHAR(20)  PRIMARY KEY NOT NULL,
+food_type VARCHAR(5),
+food_num VARCHAR(3) CHECK(food_num>0),
+food_date DATE,
+food_time TIME,
+FOREIGN KEY(building_num) REFERENCES building(building_num),
+FOREIGN KEY(stay_num) REFERENCES room(room)
+)
+
+INSERT INTO food(building_num,stay_num,food_name,food_type,food_num,food_date,food_time)VALUES('C16','269','可乐鸡','快餐汉堡','2','2021-8-12','16:00')
+
+
+CREATE TABLE goods(
+stay_num VARCHAR(3),
+goods VARCHAR(5) PRIMARY KEY NOT NULL,
+student_name VARCHAR(5),
+goods_table INT CHECK(goods_table>0),
+goods_chair INT CHECK(goods_chair>0),
+goods_bed INT CHECK(goods_bed>0),
+goods_fan INT CHECK(goods_fan>0),
+goods_light INT CHECK(goods_light>0),
+goods_windows INT CHECK(goods_windows>0),
+goods_door INT CHECK(goods_door>0),
+FOREIGN KEY(stay_num) REFERENCES room(room)
+)
+
+INSERT INTO goods(stay_num,goods,student_name,goods_table,goods_chair,goods_bed,goods_fan,goods_light,goods_windows,goods_door)VALUES('269','1.0','黄耀萱',1,1,1,1,1,2,1)
+
+CREATE TABLE student(
+student_name VARCHAR(5)NOT NULL,
+student_num VARCHAR(12) PRIMARY KEY  NOT NULL,
+student_sex VARCHAR(2) CHECK (student_sex='男' OR student_sex='女'),
+student_age VARCHAR(3) CHECK (student_age>0 AND student_age<100),
+student_phone VARCHAR(11),
+student_dept VARCHAR(10),
+student_major VARCHAR(5),
+stay_num VARCHAR(3),
+building_num VARCHAR(5),
+FOREIGN KEY(building_num) REFERENCES building(building_num),
+FOREIGN KEY(stay_num) REFERENCES room(room)
+)
+
+INSERT INTO student(student_name,student_num,student_sex,student_age,student_phone,student_dept,student_major,stay_num,building_num)VALUES('黄耀萱','201910097079','男','22','13432925679','计算机工程学院','网络工程','269','c16')
+INSERT INTO student(student_name,student_num,student_sex,student_age,student_phone,student_dept,student_major,class)VALUES('张四','202010097081','女','21','13432925681','计算机工程学院','计算机科学','计算机2班');
+
+DROP TABLE IF EXISTS admin
+DROP TABLE IF EXISTS building
+DROP TABLE IF EXISTS food
+DROP TABLE IF EXISTS goods
+DROP TABLE IF EXISTS stay
+DROP TABLE IF EXISTS student
+DROP TABLE IF EXISTS room
+
+
+INSERT INTO admin(admin_name,admin_sex,admin_phone,admin_building)VALUES('张三','男',24,'13432925679','16')
+
+INSERT INTO building(building_num,)
+
+
+CREATE TABLE room(
+building_num VARCHAR(5) NOT NULL,
+room VARCHAR(3) PRIMARY KEY NOT NULL,
+room_type VARCHAR(5) CHECK(room_type='普通' OR room_type='豪华'),
+room_count INT CHECK(room_count='2' OR room_count='4'),
+room_num INT CHECK(room_num>0 AND room_num<=4),
+room_name VARCHAR(10),
+FOREIGN KEY(building_num) REFERENCES building(building_num)
+)
+
+INSERT INTO room(building_num,room,room_type,room_count,room_num,room_name)VALUES ('c16','269','普通',4,01,'黄耀萱')
+
+
+CREATE TABLE in_out(
+student_name VARCHAR(5) NOT NULL,
+building_num VARCHAR(5) ,
+in_out_date DATE,
+in_out_time TIME,
+inorout VARCHAR(2) CHECK (inorout='出' OR inorout='入'),
+FOREIGN KEY(building_num) REFERENCES building(building_num)
+)
+
+
+CREATE TABLE room_inside(
+building_num VARCHAR(5) NOT NULL, 
+room VARCHAR(3) NOT NULL,
+room_num INT CHECK(room_num>0 AND room_num<=4),
+student_num VARCHAR(12) UNIQUE,
+student_name VARCHAR(10) UNIQUE,
+FOREIGN KEY(building_num) REFERENCES building(building_num),
+FOREIGN KEY(room) REFERENCES room(room),
+FOREIGN KEY(student_num) REFERENCES student(student_num)
+)
+
+
+SELECT * FROM room
+
+UPDATE room SET room_num=2 WHERE room_name='黄耀萱'
+
+
+
+视图
+CREATE VIEW  stu_room AS
+SELECT student_name,student_num,room.building_num,room_type,room
+FROM student,room
+
+
+CREATE VIEW  stu_room AS
+SELECT student_name,student_num,room.building_num,room_type,room
+FROM student,room
+
+
+INSERT INTO building(building_num,building_p_total)VALUES('C1','200')
+INSERT INTO building(building_num,building_p_total)VALUES('C2','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C3','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C4','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C5','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C6','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C7','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C8','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C9','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C10','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C11','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C12','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C13','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C14','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C15','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C16','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C17','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C18','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C19','200');
+INSERT INTO building(building_num,building_p_total)VALUES('C20','200');
+
+
+INSERT INTO admin(admin_name,admin_sex,admin_age,admin_phone,admin_building)VALUES('王阿姨','女',55,'13432925679','C16')；
+INSERT INTO admin(admin_name,admin_sex,admin_age,admin_phone,admin_building)VALUES('陈阿姨','女',55,'13432925679','C16');
+INSERT INTO admin(admin_name,admin_sex,admin_age,admin_phone,admin_building)VALUES('李叔','男',55,'13432925679','C16');
+
+
+
+INSERT INTO room(building_num,room,room_type,room_count,room_num,room_name)VALUES ('c16','269','普通',4,01,'黄耀萱');
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c1','111','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c1','112','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c1','113','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c1','114','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c1','115','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c1','116','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c1','116','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c1','118','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c1','119','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c1','120','普通',4);
+
+
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c2','211','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c2','212','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c2','213','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c2','214','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c2','215','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c2','216','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c2','216','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c2','218','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c2','219','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c2','220','普通',4);
+
+
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c3','311','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c3','312','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c3','313','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c3','314','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c3','315','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c3','316','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c3','316','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c3','318','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c3','319','普通',4);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c3','320','普通',4);
+
+
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c4','410','豪华',2);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c4','420','豪华',2);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c4','430','豪华',2);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c4','440','豪华',2);
+
+
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c5','510','豪华',2);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c5','520','豪华',2);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c5','530','豪华',2);
+INSERT INTO room(building_num,room,room_type,room_count)VALUES ('c5','540','豪华',2);
+
+
+
+
+CREATE VIEW C1 AS
+SELECT building.building_num,admin_name,room_type,room
+FROM admin,room,building
+WHERE building.building_num='c1' AND admin_name='王阿姨' AND room LIKE'1%'
+
+CREATE VIEW C2 AS
+SELECT building.building_num,admin_name,room_type,room
+FROM admin,room,building
+WHERE building.building_num='c2' AND admin_name='陈阿姨' AND room LIKE'2%'
+
+CREATE VIEW C3 AS
+SELECT building.building_num,admin_name,room_type,room
+FROM admin,room,building
+WHERE building.building_num='c3' AND admin_name='周叔' AND room LIKE'3%'
+
+CREATE VIEW C4 AS
+SELECT building.building_num,admin_name,room_type,room
+FROM admin,room,building
+WHERE building.building_num='c4' AND admin_name='黄叔' AND room LIKE'4%'
+
+CREATE VIEW C5 AS
+SELECT building.building_num,admin_name,room_type,room
+FROM admin,room,building
+WHERE building.building_num='c5' AND admin_name='陆阿姨' AND room LIKE'5%'
+----------------------------------------
+ALTER TABLE student ADD class VARCHAR(10)
+
+CREATE TABLE in_out(
+student_name VARCHAR(5) NOT NULL,
+building_num VARCHAR(5) ,
+in_out_date DATE,
+in_out_time TIME,
+inorout VARCHAR(2) CHECK (inorout='出' OR inorout='入'),
+FOREIGN KEY(building_num) REFERENCES building(building_num)
+)
+
+DROP TABLE in_out
+
+ALTER TABLE building ADD building_dept VARCHAR(10);
+
+INSERT INTO building(building_num,building_p_total)VALUES('C6',200),('C7',200);
+
+
+UPDATE building SET building_dept = '汽车学院' WHERE building_num = 'C1';
+UPDATE building SET building_dept = '电子信息工程学院' WHERE building_num = 'C2';
+UPDATE building SET building_dept = '计算机工程学院' WHERE building_num = 'C3';
+UPDATE building SET building_dept = '建筑学院' WHERE building_num = 'C4';
+UPDATE building SET building_dept = '管理学院' WHERE building_num = 'C5';
+
+
+INSERT INTO room_inside(building_num,room,room_num,student_num,student_name)VALUES
+('C1','111',1,'201910097079','张一'),
+('C1','111',2,'201910097080','张二'),
+('C1','111',3,'202010097079','张三'),
+('C1','111',4,'202010097081','张四')
+;
+
+INSERT INTO in_out(student_name,building_num,in_out_date,in_out_time,inorout)VALUES
+('张一','C1','2021-9-20','9:00','出'),
+('张一','C1','2021-9-20','11:00','入')
+
+SELECT room 
+FROM room_inside 
+WHERE building_num='C1' AND student_name='张一'
+
+UPDATE student SET class='经济2班' WHERE student_num = '202010097082'
+
+UPDATE admin SET admin_name = '李叔',admin_age='35',admin_phone='13432925679',admin_sex='男' WHERE admin_building='C1'
+
+
+————————————————————————————————
+
+CREATE VIEW C1 AS
+SELECT building.building_num,admin_name,room_type,room
+FROM admin,room,building
+WHERE building.building_num='c1' AND admin_name='王阿姨' AND room LIKE'1%'
+
+
+CREATE VIEW C2 AS
+SELECT building.building_num,admin_name,room_type,room
+FROM admin,room,building
+WHERE building.building_num='c2' AND admin_name='陈阿姨' AND room LIKE'2%'
+
+CREATE VIEW C3 AS
+SELECT building.building_num,admin_name,room_type,room
+FROM admin,room,building
+WHERE building.building_num='c3' AND admin_name='周叔' AND room LIKE'3%'
+
+CREATE VIEW C4 AS
+SELECT building.building_num,admin_name,room_type,room
+FROM admin,room,building
+WHERE building.building_num='c4' AND admin_name='黄叔' AND room LIKE'4%'
+
+CREATE VIEW C5 AS
+SELECT building.building_num,admin_name,room_type,room
+FROM admin,room,building
+WHERE building.building_num='c5' AND admin_name='陆阿姨' AND room LIKE'5%'
+
+CREATE INDEX index_room
+ON room(room)
+
+
+
+INSERT INTO student(student_name,student_num,student_sex,student_age,student_phone,student_dept,student_major,stay_num,building_num)VALUES('黄耀萱','201910097079','男','22','13432925679','计算机工程学院','网络工程','269','c16');
+
+
+CREATE TABLE room_inside(
+building_num VARCHAR(5) NOT NULL, 
+room VARCHAR(3) NOT NULL,
+room_num INT CHECK(room_num>0 AND room_num<=4) UNIQUE,
+student_num VARCHAR(12),
+student_name VARCHAR(10) UNIQUE,
+FOREIGN KEY(building_num) REFERENCES building(building_num),
+FOREIGN KEY(room) REFERENCES room(room),
+FOREIGN KEY(student_num) REFERENCES student(student_num)
+)
+
+DROP TABLE room_inside
+
+
+
+INSERT  INTO student(student_name,student_num,student_sex,student_age,student_phone,student_dept,student_major,class)VALUES
+('张八','202010097088','女','21','13432955685','计算机工程学院','计算机科学','计算机2班'),
+('李一','202010098081','女','21','13432924567','计算机工程学院','网络工程','网络工程2班')
+;
+
+
+INSERT INTO student(student_name,student_num,student_sex,student_age,student_phone,student_dept,student_major)VALUES('张三','202010097079','女','21','13432925680','计算机工程学院','计算机科学');
+INSERT INTO student(student_name,student_num,student_sex,student_age,student_phone,student_dept,student_major,class)VALUES('张四','202010097081','女','21','13432925681','计算机工程学院','计算机科学','计算机2班');
